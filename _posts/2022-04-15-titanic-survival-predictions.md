@@ -1,6 +1,6 @@
 ---
 layout: single
-title:  "jupyter notebook 변환하기!"
+title:  "타이타닉 과제"
 categories: coding
 tag: [python, blog, jekyll]
 toc: true
@@ -394,7 +394,7 @@ train_data.describe()
 </div>
 
 
-전처리 파이프라인을 구축 :
+**전처리 파이프라인을 구축 :**
 
 
 
@@ -406,7 +406,7 @@ num_pipeline = Pipeline([
     ])
 ```
 
-범주 속성을 위한 파이프라인을 구축:
+**범주 속성을 위한 파이프라인을 구축:**
 
 
 
@@ -455,7 +455,7 @@ array([[-0.56573646,  0.43279337, -0.47367361, ...,  0.        ,
 y_train = train_data["Survived"]
 ```
 
-**RandomForestClassifier** :
+**RandomForestClassifier :**
 
 
 
@@ -506,7 +506,7 @@ print(acc_svc)
 <pre>
 0.8249313358302123
 </pre>
-SVC가 더 좋음
+**SVC가 더 좋음**
 
 
 
