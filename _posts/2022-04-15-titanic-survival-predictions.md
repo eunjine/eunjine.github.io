@@ -1,11 +1,14 @@
 ---
 layout: single
 title:  "타이타닉 과제"
+
 categories: coding
 tag: [python, blog, jekyll]
 toc: true
 author_profile: false
 ---
+
+# 타이타닉 캐글 
 
 <head>
   <style>
