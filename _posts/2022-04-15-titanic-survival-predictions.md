@@ -8,8 +8,6 @@ toc: true
 author_profile: false
 ---
 
-# 타이타닉 캐글 
-
 <head>
   <style>
     table.dataframe {
