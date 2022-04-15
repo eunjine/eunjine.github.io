@@ -78,7 +78,7 @@ author_profile: false
   </style>
 </head>
 
-
+기본 세팅:
 
 ```python
 from sklearn.compose import ColumnTransformer
@@ -91,14 +91,13 @@ from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import MinMaxScaler
 ```
 
+데이터 적재:
 
 ```python
 train_data = pd.read_csv("../input/titanic/train.csv")
 test_data = pd.read_csv("../input/titanic/test.csv")
 gender_submission = pd.read_csv('../input/titanic/gender_submission.csv')
 ```
-
-Let's fetch the data and load it:
 
 
 
