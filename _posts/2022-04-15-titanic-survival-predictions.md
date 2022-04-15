@@ -218,32 +218,34 @@ train_data.head()
 </div>
 
 
-attributes :
+속성 :
 
-* **PassengerId**: a unique identifier for each passenger
+* **PassengerId**: 각 승객의 고유 식별자
 
-* **Survived**: that's the target, 0 means the passenger did not survive, while 1 means he/she survived.
+* **Survived**: 0은 승객 살아남지 못함, 1은 생존.
 
-* **Pclass**: passenger class.
+* **Pclass**: 티켓 등급
 
-* **Name**, **Sex**, **Age**: self-explanatory
+* **Name**, **Sex**, **Age**:
 
-* **SibSp**: how many siblings & spouses of the passenger aboard the Titanic.
+* **SibSp**: 함께 탑승한 형제자매, 배우자의 수
 
-* **Parch**: how many children & parents of the passenger aboard the Titanic.
+* **Parch**: 함께 탑승한 부모, 자식의 수
 
-* **Ticket**: ticket id
+* **Ticket**: 티켓 번호
 
-* **Fare**: price paid (in pounds)
+* **Fare**: 지불한 가격(파운드)
 
-* **Cabin**: passenger's cabin number
+* **Cabin**: 승객의 객실 번호
 
-* **Embarked**: where the passenger embarked the Titanic
-
-
-Age, Cabin, *Embarked attributes are sometimes null (less than 891 non-null). especially the Cabin (77% are null). The Age attribute has about 19% null values, so we will need to decide what to do with them. Replacing null values with the median age seems reasonable.
+* **Embarked**: 탑승 항구
 
 
+Age, Cabin, Embarked 속성이 null(891 non-null 미만)인 경우가 있다. 특히 Cabin(77%는 Null). *Age 속성은 약 19%의 null 값을 가지므로 이 값을 사용하여 수행할 작업을 결정. 대체 값을 중위수 연령으로 바꾸는 것이 합리적. 
+
+
+
+누락된 데이터 :
 
 ```python
 print(pd.isnull(train_data).sum())
@@ -264,8 +266,16 @@ Cabin          687
 Embarked         2
 dtype: int64
 </pre>
-예측: Sex: Females are more likely to survive. SibSp/Parch: People traveling alone are more likely to survive. Age was less than 30 years old. Pclass: People of higher socioeconomic class are more likely to survive.
 
+예측:
+
+* **Sex**: 여성이 생존할 가능성이 더 높음
+
+* **SibSp/Parch**: 혼자 여행하는 사람들은 생존할 가능성이 더 높음
+
+* **Age**: 30세 미만
+
+* **Pclass**: 사회경제적 계층이 높은 사람들이 생존할 가능성이 더 높음
 
 
 ```python
@@ -417,6 +427,7 @@ cat_pipeline = Pipeline([
     ])
 ```
 
+**수치 및 범주형 파이프라인에 가입 :**
 
 ```python
 num_attribs = ["Age", "SibSp", "Parch", "Fare"]
@@ -428,6 +439,7 @@ preprocess_pipeline = ColumnTransformer([
     ])
 ```
 
+원래 데이터를 가져와 원하는 머신 러닝 모델에 제공할 수 있는 수치 입력 기능을 출력하는 전처리 파이프라인이 생김.
 
 ```python
 X_train = preprocess_pipeline.fit_transform(train_data)
@@ -454,7 +466,7 @@ array([[-0.56573646,  0.43279337, -0.47367361, ...,  0.        ,
 y_train = train_data["Survived"]
 ```
 
-**RandomForestClassifier :**
+RandomForestClassifier로 훈련:
 
 
 
@@ -468,6 +480,8 @@ forest_clf.fit(X_train, y_train)
 <pre>
 RandomForestClassifier(random_state=42)
 </pre>
+
+테스트 셋에 대한 예측 :
 
 ```python
 X_test = preprocess_pipeline.transform(test_data)
@@ -486,9 +500,9 @@ print(acc_randomforest)
 <pre>
 0.8092759051186016
 </pre>
-**SVC** :
 
 
+SVC로 훈련 :
 
 ```python
 from sklearn.svm import SVC
@@ -505,7 +519,9 @@ print(acc_svc)
 <pre>
 0.8249313358302123
 </pre>
-**SVC가 더 좋음**
+
+**RandomForestClassifier보다 SVC 모델이 더 좋음**
+
 
 
 
