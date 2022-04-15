@@ -524,7 +524,7 @@ print(acc_svc)
 
 
 
-
+저장:
 ```python
 gender_submission['Survived'] = svm_clf.predict(X_test).astype(int)
 
