@@ -236,7 +236,7 @@ train_data.head()
 </table>
 </div>
 
-
+# 3. 데이터 분석
 속성 :
 
 * **PassengerId**: 각 승객의 고유 식별자
@@ -421,6 +421,8 @@ train_data.describe()
 </table>
 </div>
 
+# 4. 데이터 전처리 및 특성 추출
+
 
 **전처리 파이프라인을 구축 :**
 
@@ -485,6 +487,7 @@ array([[-0.56573646,  0.43279337, -0.47367361, ...,  0.        ,
 y_train = train_data["Survived"]
 ```
 
+# 5.모델 설계 및 학습
 RandomForestClassifier로 훈련:
 
 
@@ -542,8 +545,7 @@ print(acc_svc)
 **RandomForestClassifier보다 SVC 모델이 더 좋음**
 
 
-
-저장:
+# 6.저장
 ```python
 gender_submission['Survived'] = svm_clf.predict(X_test).astype(int)
 
