@@ -79,6 +79,22 @@ author_profile: false
   </style>
 </head>
 
+# Contents
+1. 문제정의하기
+2. 데이터 불러오기
+3. 데이터 분석
+4. 데이터 전처리 및 특성 추출
+5. 모델 설계 및 학습
+6. 저장
+
+
+# 1. 문제 정의하기
+타이타닉 호에서 탑승했던 사람들의 정보를 바탕으로 생존자를 예측하는 문제
+
+
+# 2. 데이터 불러오기
+
+
 기본 세팅:
 
 ```python
@@ -91,6 +107,8 @@ import numpy as np
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import MinMaxScaler
 ```
+
+
 
 데이터 적재:
 
