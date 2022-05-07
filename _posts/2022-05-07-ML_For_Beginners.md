@@ -22,16 +22,12 @@ use_math: true
 ## **chap1**
 
 ### **데이터 불러오기**
----
 
 ```python
-# imblearn 설치하기 위해 pip install
-
 pip install imblearn
 ```
 
 ```python
-# 데이터를 가져오는 데 필요한 패키지를 가져오고 시각화할 수 있으며, imblearn에서 SMOT도 가져올 수 있다.
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -39,10 +35,9 @@ import numpy as np
 from imblearn.over_sampling import SMOTE
 ```
 ```python
-# 데이터 가져와서 읽기
-# read_csv()를 사용하여 해당 csv파일의 내용을 읽고 변수 df에 저장
 df  = pd.read_csv('cuisines.csv')
-# 앞에서부터 5개의 데이터를 확인
+```
+```python
 df.head()
 ```
 
@@ -56,7 +51,6 @@ df.head()
 
 5 rows × 385 columns
 ```python
-# info()를 호출하여 데이터에 대한 정보를 가져오기
 df.info()
 ```
 ```
@@ -67,10 +61,9 @@ dtypes: int64(384), object(1)
 memory usage: 7.2+ MB
 ```
 
-**요리 당 데이터의 분포를 알아보기**
+### **연습 - 요리에 대해 배우기**
 
 ```python
-# barh() 호출하여 데이터를 막대 그래프로 출력
 df.cuisine.value_counts().plot.barh() # 데이터 분포가 고르지 않음 
 ```
 
@@ -78,7 +71,7 @@ df.cuisine.value_counts().plot.barh() # 데이터 분포가 고르지 않음
 ![res_1](http://jjhcom.github.io/assets/images/banners/res_1.png)
 
 ```python
-# 요리 당 얼마나 많은 데이터 사용할 수 있는지 확인
+# 요리당 사용할 수 있는 데이터 크기
 thai_df = df[(df.cuisine == "thai")]
 japanese_df = df[(df.cuisine == "japanese")]
 chinese_df = df[(df.cuisine == "chinese")]
@@ -98,17 +91,13 @@ chinese df: (442, 385)
 indian df: (598, 385)
 korean df: (799, 385)
 ```
+### **성분 발견하기**
 
-이제 데이터를 더 깊이 파고들어 요리 당 전형적인 재료가 무엇인지 배울 수 있다.
+지금부터 데이터를 깊게 파서 요리별 일반적인 재료가 무엇인지 배우기위해 요리 사이의 혼동을 일으킬 중복 데이터를 정리해보자.
 
-음식 사이에 혼란을 일으키는 반복적인 데이터를 지워야 하는데, 이 문제에 대해 알아볼 것이다.
-
-파이썬에서 `creat_ingredient()` 함수를 만들어 **성분 데이터 프레임을 생성**한다.
-
-이 기능은 **도움이 되지 않는 열을 삭제**하는 것부터 시작하여 **성분을 개수에 따라 정렬**한다.
+- Python에서 성분 데이터프레임을 생성하기 위해서 create_ingredient() 함수를 만든다. 이 함수는 도움이 안되는 열을 삭하고 개수별로 재료를 정렬한다.
 
 ```python
-# 도움이 되지 않는 열을 삭제하고 성분을 개수에 따라 정렬하혀 성분 데이터 프레임을 생성하는 함수 작성
 def create_ingredient_df(df):
     ingredient_df = df.T.drop(['cuisine','Unnamed: 0']).sum(axis=1).to_frame('value')
     ingredient_df = ingredient_df[(ingredient_df.T != 0).any()]
@@ -116,8 +105,10 @@ def create_ingredient_df(df):
     return ingredient_df
 ```
 
+함수를 사용하여 요리별 가장 인기있는 10개 재료의 아이디어를 얻을 수 있다.
+
 ```python
-# 요리별로 가장 인기 있는 10대 식재료에 대한 아이디어 얻기(Thai)
+# 타이
 thai_ingredient_df = create_ingredient_df(thai_df)
 thai_ingredient_df.head(10).plot.barh()
 ```
@@ -126,7 +117,7 @@ thai_ingredient_df.head(10).plot.barh()
 ![res_2](http://jjhcom.github.io/assets/images/banners/res_2.png)
 
 ```python
-# 요리별로 가장 인기 있는 10대 식재료에 대한 아이디어 얻기(Japanese)
+# 일본
 japanese_ingredient_df = create_ingredient_df(japanese_df)
 japanese_ingredient_df.head(10).plot.barh()
 ```
@@ -134,7 +125,7 @@ japanese_ingredient_df.head(10).plot.barh()
 ![res_3](http://jjhcom.github.io/assets/images/banners/res_3.png)
 
 ```python
-# 요리별로 가장 인기 있는 10대 식재료에 대한 아이디어 얻기(Chinese)
+# 중국
 chinese_ingredient_df = create_ingredient_df(chinese_df)
 chinese_ingredient_df.head(10).plot.barh()
 ```
@@ -143,7 +134,7 @@ chinese_ingredient_df.head(10).plot.barh()
 
 
 ```python
-# 요리별로 가장 인기 있는 10대 식재료에 대한 아이디어 얻기(Indian)
+# 인도
 indian_ingredient_df = create_ingredient_df(indian_df)
 indian_ingredient_df.head(10).plot.barh()
 ```
