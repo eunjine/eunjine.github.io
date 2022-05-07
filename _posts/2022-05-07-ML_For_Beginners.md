@@ -663,29 +663,28 @@ SVC(C=10, kernel='linear', probability=True, random_state=0)
 # predict()를 호출하면서 모델을 테스트
 y_pred = model.predict(X_test)
 
-# 모델의 품질 확인하기 위해 확인
+# 모델의 품질 확인
 print(classification_report(y_test,y_pred))
 ```
 
 ```
               precision    recall  f1-score   support
 
-     chinese       0.67      0.70      0.68       243
-      indian       0.89      0.85      0.87       238
-    japanese       0.83      0.72      0.77       237
-      korean       0.81      0.75      0.78       226
-        thai       0.71      0.84      0.77       255
+     chinese       0.72      0.69      0.70       257
+      indian       0.91      0.87      0.89       243
+    japanese       0.79      0.77      0.78       239
+      korean       0.83      0.79      0.81       236
+        thai       0.72      0.84      0.78       224
 
-    accuracy                           0.77      1199
-   macro avg       0.78      0.77      0.78      1199
-weighted avg       0.78      0.77      0.77      1199
+    accuracy                           0.79      1199
+   macro avg       0.79      0.79      0.79      1199
+weighted avg       0.79      0.79      0.79      1199
 ```
+정확도는 좋음
 
-### Onnx로 모델 전환 
+### **Onnx로 모델 변환**
 
-**적절한 텐서 수**로 변환해야 한다.
-
-이 데이터 집합에는 380개의 성분이 나열되어 있으므로 `FloatTensorType`에 이 숫자를 기록해야 한다.
+적절한 Tensor 수로 변환해야 한다. 데이터 세트에는 380개의 성분이 나열되어 있으므로 `FloatTensorType`에 이 숫자를 표기해야 한다.
 
 ```python
 # 380개의 수를 tensor를 사용하여 변환 
@@ -697,7 +696,7 @@ options = {id(model): {'nocl': True, 'zipmap': False}}
 ```
 
 ```python
-# onx를 생성하고 'model.onnx'로 저장
+# onx를 생성하고 'model.onnx' 파일로 저장
 onx = convert_sklearn(model, initial_types=initial_type, options=options)
 with open("./model.onnx", "wb") as f:
     f.write(onx.SerializeToString())
