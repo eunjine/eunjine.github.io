@@ -168,22 +168,21 @@ feature_df.head()
 
 5 rows × 380 columns
 
-이제 데이터를 정리했으므로 `SMOTE`, 즉 "Synthetic Minority Over-sampling Technique(합성 소수 과표본 기법)"을 사용하여 **균형**을 잡을 것이다.
+### **데이터셋 균형 맞추기**
+
+데이터를 정리 했으므로 SMOTE ("Synthetic Minority Over-sampling Technique")를 사용하여 균형을 맞춘다.
 
 ```python
 #fit_resample(): 보간으로 새로운 샘플을 생성함 
 oversample = SMOTE()
 transformed_feature_df, transformed_label_df = oversample.fit_resample(feature_df, labels_df)
+```
+데이터의 균형을 맞추면 분류할 때 더 나은 결과를 얻을 수 있다. 데이터 균형을 맞추면 왜곡된 데이터를 가져와 이러한 불균형을 제거하는 데 도움이 된다.
 
-# 성분 당 레이블 수 확인 -> 정제된 균형이 맞는 데이터가 출력
+```python
 print(f'new label count: {transformed_label_df.value_counts()}')
 print(f'old label count: {df.cuisine.value_counts()}')
 ```
-**데이터의 균형을 유지**함으로써 *데이터를 분류할 때 더 나은 결과*를 얻을 수 있다.
-
-**이진분류기**를 생각해보면, 대부분의 **데이터가 `하나`의 클래스**인 경우 *ML 모델은 단지 더 많은 데이터가 있다*는 이유로 **해당 클래스를 더 자주 예측**한다.
-
-**데이터의 균형**을 맞추는 것은 왜곡된 데이터가 있고, 이러한 *왜곡 데이터와 같은* **불균형을 제거**하는 데 도움이 된다.
 
 ```
 new label count: thai        799
@@ -201,10 +200,9 @@ Name: cuisine, dtype: int64
 ```
 
 ```python
-# 레이블 및 기능을 포함한 균형 잡힌 데이터를 파일로 내보낼 수 있는 새 데이터 프레임에 저장
+# 레이블과 특성을 포함한 균형 잡힌 데이터를 파일로 내보낼 수 있는 새 데이터 프레임에 저장
 transformed_df = pd.concat([transformed_label_df,transformed_feature_df],axis=1, join='outer')
-# 데이터를 한 번 더 살펴보기(맨 앞 5가지의 데이터 확인)
-transformed_df.head()
+transformed_df
 ```
 
 |  |	cuisine | almond | angelica | anise | anise_seed | apple | apple_brandy | apricot	| armagnac | artemisia | ... | whiskey | white_bread | white_wine | whole_grain_wheat_flour | wine | wood | yam | yeast |	yogurt |	 zucchini |
@@ -224,7 +222,6 @@ transformed_df.head()
 3995 rows × 381 columns
 
 ```python
-# 데이터 정보 확인
 transformed_df.info()
 # 다음 교육에서 사용할 수 있도록 데이터 복사본을 저장
 transformed_df.to_csv("../data/cleaned_cuisines.csv")
@@ -239,21 +236,15 @@ memory usage: 11.6+ MB
 
 🎈 **데이터 폴더를 살펴보고 이진 또는 다중 클래스 분류에 적합한 데이터 셋이 있는지 확인하고 해당 데이터 세트에 대해 어떤 질문을 할지 생각해보기**
 
-## Classifiers 1
+## **chap2**
 
-### 요리 분류기
-- "Introduction"에서 저장한 모든 음식에 대한 **균형 잡힌 깨끗한 데이터로 가득 찬 데이터 세트**를 사용할 것이다.
-- 이 데이터 세트를 **다양한 분류기**와 함께 사용하여 *재료 그룹을 기반*으로 **특정 국가 음식을 예측**할 수 있다.
-- 이렇게 하는 동안, **분류 작업**에 알고리즘을 활용할 수 있는 몇 가지 방법에 대해 자세히 알아볼 수 있다.
+### **연습 - 국가 요리 예측하기**
 
-### 연습
-**국민 요리 예언**
 ```python
 # 파일 불러오기 
 import pandas as pd
 cuisines_df = pd.read_csv("cleaned_cuisines.csv")
 
-# 맨 앞 5개의 데이터 확인
 cuisines_df.head()
 ```
 
@@ -274,10 +265,8 @@ from sklearn.metrics import accuracy_score,precision_score,confusion_matrix,clas
 from sklearn.svm import SVC
 import numpy as np
 
-# 훈련을 위해 두개의 데이터프레임으로 X와 Y좌표를 나눈다.
-# 요리는 라벨 데이터프레임이 될 수 있다.
+# 훈련을 위해 두개의 데이터프레임으로 X와 Y좌표를 나눔
 cuisines_label_df = cuisines_df['cuisine']
-# 데이터 확인
 cuisines_label_df.head()
 ```
 ```
@@ -291,7 +280,7 @@ Name: cuisine, dtype: object
 
 
 ```python
-# 'Unnamed: 0'의 열과 'cuisine' 열을 'drop()'을 호출하여 삭제 -> 나머지 데이터를 교육 가능한 형상으로 저장
+# 'Unnamed: 0'의 열과 'cuisine' 열을 'drop()'을 호출하여 삭제
 cuisines_feature_df = cuisines_df.drop(['Unnamed: 0', 'cuisine'], axis=1)
 cuisines_feature_df.head() # 'Unnamed: 0'과 'cuisine' 
 ```
@@ -307,74 +296,33 @@ cuisines_feature_df.head() # 'Unnamed: 0'과 'cuisine'
 
 ### 분류기 선택
 
-데이터가 깨끗해지고, 훈련 준비가 되었으므로 작업에 사용할 **알고리즘**을 결정해야 한다.
+데이터가 정리되고 학습할 준비가 되었으므로 작업에 사용할 알고리즘을 결정해야함
 
-`Scikit-learn` 그룹은 **지도 학습**에서 분류되며, 이 범주에서 분류할 수 있는 다양한 방법을 찾을 수 있다.
+Scikit-learn은 지도 학습에서 분류를 그룹화하고 해당 범주에서 분류하는 다양한 방법을 찾을 수 있음
+- 선형 모델
+- 서포트 벡터 머신
+- 확률적 경사하강법
+- 가장 가까운 이웃
+- 가우스 프로세스
+- 의사결정나무
+- 앙상블 방법(투표 분류기)
+- 다중 클래스 및 다중 출력 알고리즘(다중 클래스 및 다중 레이블 분류, 다중 클래스 다중 출력 분류)
+- 신경망 (이 강의의 범위를 벗어나므로 여기선 사용x)
 
-**모든 분류 기법이 포함된 방법**
-- Linear Models (선형 모델)
-- Support Vector Machines (서포트 벡터 머신)
-- Stochastic Gradient Descent (확률적 경사 하강법)
-- Nearest Neighbors (NN)
-- Gaussian Processes (가우시안 프로세스)
-- Decision Trees (의사 결정 트리)
-- Ensemble methods (voting Classifier) (앙상블 기법)
-- Multiclass and multioutput algorithms (multiclass and multilabel classification, multiclass-multioutput classification) (다중 클래스 및 다중 출력 알고리즘)
-  - 신경망을 사용하여 데이터를 분류할 수도 있지만, 이 범위를 벗어난다.
+분류기를 선택하기위해선 여러 가지를 실행하고 좋은 결과를 찾는 것이 테스트하는 방법이다.기본적으로 Scikit-learn에 로지스틱 회귀를 수행하도록 요청할 때 지정해야 하는 `multi_class` 와 `solver` 중요한 두 개의 파라미터가 있다. 
+- `multi_class` 값은 특정 동작을 적용
+- `solver`의 값은 사용할 알고리즘
 
+#### **더 나은 접근법**
+성급히 추측하기보다 더 나은 방법은 다운로드 가능한 ML Cheat sheet의 아이디어를 따르는 것이다.
+![image.png](attachment:1669a601-ed6f-4973-971d-1381acad4c7e.png)
+> 다중 클래스 분류 옵션을 자세히 설명하는 Microsoft의 알고리즘 치트 시트 섹션
 
-종종 여러 개를 훑어보고 좋은 결과는 찾는 것이 **테스트하는 방법**이다.
-
-`Scikit-learn`은 `KNeighbors`, `SVC`, `GaussianProcessClassifier`, `DecisionTreeClassifier`, `RandomForestClassifier`, `MLPClassifier`, `AdaBoostClassifier`, `GaussianNB` 그리고 `QuadraticDiscrinationAnalysis`를 **비교**하고 **시각화된 결과**를 보면서, **생성된 데이터세트**에 대해 나란히 비교한다.
-
-![classifiers1](http://jjhcom.github.io/assets/images/banners/classifiers1.png)
-
-
-    - Scikit-learn의 설명서에서 생성된 그림
-    - AutoML은 이러한 비교를 클라우드에서 실행하여 데이터에 가장 적합한 알고리즘을 선택할 수 있도록 함으로써 이 문제를 해결
-
-하지만, 넓게 추축하는 것보다 더 나은 방법은 **다운로드 가능한 `ML Cheat sheet`의 아이디어**를 따르는 것이다.
-
-이때, **다중 클래스 문제**에 대해 몇 가지 **선택사항**이 있다는 것을 발견한다.
-
-![classifiers2](http://jjhcom.github.io/assets/images/banners/classifiers2.png)
-  > 다중 클래스 분류 옵션을 자세히 설명하는 Microsoft 알고리즘 차트 시트의 분류
-
-### 추론
-
-제약 조건들을 고려할 때, 다른 접근 방식들을 통해 추론할 수 있는지 알아볼 것이다.
-- **신경망은 너무 무겁다**
-  - 깨끗하지만, 최소한의 데이터 세트와 노트북을 통해 로컬로 교육을 실행하고 있다는 사실을 감안할 때 신경망은 이 작업에 너무 무겁다
-- **2-클래스 분류기가 없다**
-  - OvA를 배제하기 위해, 2-클래스 분류기를 사용하지 않는다.
-- **의사 결정 트리 또는 로지스틱 회귀 분석이 작동할 수 있다**
-  - 의사 결정 트리가 작동하거나 다중 클래스 데이터에 대해 로지스틱 회귀 분석을 수행할 수 있다.
-- **멀티클래스 부스트 결정 트리는 다른 문제를 해결한다**
-  - 멀티클래스 부스트 결정 트리는 순위를 구축하도록 설계된 작업과 같은 비모수 작업에 가장 적합하므로 유용하지 않다.
-
-### Scikit-learn 사용하기
-- `Scikit-learn`을 사용하여 데이터를 분석할 것이다.
-- `Scikit-learn`에서는 `로지스틱 회귀 분석`을 사용하는 여러 가지 방법이 있다.
--  전달할 매개 변수를 살펴봐야 한다.
-- 기본적으로 `Scikit-learn`에게 `로지스틱 회귀 분석`을 수행하도록 요청할때 지정해야 하는 중요한 두가지의 매개 변수가 있다.  
-  - `multi_class` : 특정 동작을 적용 
-  - `solver` : 사용할 알고리즘
-  - 모든 `solver`와 `multi_class의 값`를 쌍으로 구성할 수 있는 것은 아니다.
-
-**멀티 클래스**사례에서의 **훈련 알고리즘**
-- `multi_class` 옵션이 `ovr`로 지정되었을 때 **OVR 체계 사용**
-- `multi_class` 옵션이 `multinominal`로 지정되면 **교차 엔트로피 손실을 사용**
-  - 현재 `multinominal` 옵션은 `lbfgs`, `sag`, `saga`, `newton-cg` solvers에만 지원된다.
+기본적으로 Scikit-learn에 로지스틱 회귀를 수행하도록 요청할 때 지정해야 하는 `multi_class` 와 `solver` 중요한 두 개의 파라미터가 있다. 
+- `multi_class` 값은 특정 동작을 적용
+- `solver`의 값은 사용할 알고리즘
 
 
-📌 여기서 **'scheme'** 은 `ovr`이나 `multinominal`일 수 있다.
-- 로지스틱 회귀는 실제로 이진 분류기를 지원하도록 설계되었기 때문에, 이러한 체계를 통해 다중 클래스 분류 작업을 더 잘 처리할 수 있다.
-
-📌 **'solver'** 는 "*최적화 문제에 사용할 알고리즘*"으로 정의된다.
-
-📌 `Scikit-learn`은 `solvers`가 다양한 종류의 데이터 구조에서 나타나는 **다양한 문제를 처리하는 방법**을 설명하는 **표를 제공**한다.
-
-![classifiers3](http://jjhcom.github.io/assets/images/banners/classifiers3.png)
 
 ### 연습 
 **데이터 나누기**
