@@ -112,8 +112,7 @@ thai_ingredient_df = create_ingredient_df(thai_df)
 thai_ingredient_df.head(10).plot.barh()
 ```
 
-
-![res_2](http://jjhcom.github.io/assets/images/banners/res_2.png)
+![image](https://user-images.githubusercontent.com/62239143/167248357-418b4789-6f54-436a-99c5-954a9ec293c2.png)
 
 ```python
 # 일본
@@ -121,7 +120,7 @@ japanese_ingredient_df = create_ingredient_df(japanese_df)
 japanese_ingredient_df.head(10).plot.barh()
 ```
 
-![res_3](http://jjhcom.github.io/assets/images/banners/res_3.png)
+![image](https://user-images.githubusercontent.com/62239143/167248364-446c08a5-1bd9-4461-a496-d68d424205db.png)
 
 ```python
 # 중국
@@ -129,7 +128,7 @@ chinese_ingredient_df = create_ingredient_df(chinese_df)
 chinese_ingredient_df.head(10).plot.barh()
 ```
 
-![res_4](http://jjhcom.github.io/assets/images/banners/res_4.png)
+![image](https://user-images.githubusercontent.com/62239143/167248370-205807ee-eec8-4a85-ab42-5fc4757feadd.png)
 
 
 ```python
@@ -138,21 +137,21 @@ indian_ingredient_df = create_ingredient_df(indian_df)
 indian_ingredient_df.head(10).plot.barh()
 ```
 
-![res_5](http://jjhcom.github.io/assets/images/banners/res_5.png)
+![image](https://user-images.githubusercontent.com/62239143/167248378-886e4508-aa65-42f4-8396-316ea62bdb08.png)
 
 
 ```python
-# 요리별로 가장 인기 있는 10대 식재료에 대한 아이디어 얻기(Korean)
+# 한국
 korean_ingredient_df = create_ingredient_df(korean_df)
 korean_ingredient_df.head(10).plot.barh()
 ```
 
-![res_6](http://jjhcom.github.io/assets/images/banners/res_6.png)
+![image](https://user-images.githubusercontent.com/62239143/167248383-2029db17-23e0-43f5-9de4-9207098d55f3.png)
 
 
 
 ```python
-# drop()을 호출하여 구별되는 요리 사이에 혼란을 일으키는 가장 일반적인 재료 삭제 -> 'rice', 'garlic', 'ginger'와 같은 일반적인 재료
+# 구별되는 요리 사이에 혼란을 주는 가장 공통적인 재료를 삭제 
 feature_df= df.drop(['cuisine','Unnamed: 0','rice','garlic','ginger'], axis=1)
 labels_df = df.cuisine #.unique()
 feature_df.head()
@@ -172,7 +171,7 @@ feature_df.head()
 이제 데이터를 정리했으므로 `SMOTE`, 즉 "Synthetic Minority Over-sampling Technique(합성 소수 과표본 기법)"을 사용하여 **균형**을 잡을 것이다.
 
 ```python
-# fit_resample()을 호출하면 이 전략은 보간을 통해 새 샘플을 생성
+#fit_resample(): 보간으로 새로운 샘플을 생성함 
 oversample = SMOTE()
 transformed_feature_df, transformed_label_df = oversample.fit_resample(feature_df, labels_df)
 
