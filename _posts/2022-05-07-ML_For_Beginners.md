@@ -315,7 +315,7 @@ Scikit-learn은 지도 학습에서 분류를 그룹화하고 해당 범주에�
 
 #### **더 나은 접근법**
 성급히 추측하기보다 더 나은 방법은 다운로드 가능한 ML Cheat sheet의 아이디어를 따르는 것이다.
-![image.png](attachment:1669a601-ed6f-4973-971d-1381acad4c7e.png)
+![image](https://user-images.githubusercontent.com/62239143/167248760-1d3552f0-af22-4b65-a992-77c09aa63d20.png)
 > 다중 클래스 분류 옵션을 자세히 설명하는 Microsoft의 알고리즘 치트 시트 섹션
 
 기본적으로 Scikit-learn에 로지스틱 회귀를 수행하도록 요청할 때 지정해야 하는 `multi_class` 와 `solver` 중요한 두 개의 파라미터가 있다. 
@@ -324,23 +324,19 @@ Scikit-learn은 지도 학습에서 분류를 그룹화하고 해당 범주에�
 
 
 
-### 연습 
+### **연습-데이터 나누기**
 **데이터 나누기**
-
-이전 수업에서 후자에 대해 알게 된 이후, 첫번째 교육 시행을 위해 **로지스틱 회귀 분석**에 초점을 맞출 수 있다.
 
 ```python
 # train_test_split()을 호출하여 데이터를 훈련, 테스트 그룹으로 나눈다,
 X_train, X_test, y_train, y_test = train_test_split(cuisines_feature_df, cuisines_label_df, test_size=0.3)
 ```
 
-**로지스틱 회귀 분석 적용**
-다중 클래스 케이스를 사용 중이므로, 사용할 `scheme`과 설정할 `solver`를 선택해야 한다.
+### **연습 - 로지스틱 회귀 적용하기**
 
-**훈련**을 위해, `다중 클래스 설정`과 `liblinear solver`을 함께 **로지스틱 회귀 분석**을 사용한다.
+1. multi_class를 `ovr`로 설정하고 solver도 `liblinear`로 설정하여 로지스틱 회귀를 만든다.
 
 ```python
-# multi_class를 'ovr'로 지정하고, solvr를 'linbear'로 설정한 "로지스틱 회귀 분석" 생성
 lr = LogisticRegression(multi_class='ovr',solver='liblinear')
 model = lr.fit(X_train, np.ravel(y_train))
 
@@ -352,10 +348,10 @@ print ("Accuracy is {}".format(accuracy))
 ```
 Accuracy is 0.8065054211843202
 ```
-**정확도**가 약 80%를 넘는다.
+
+정확도 80%이상으로 좋음
 
 ```python
-# 하나의 데이터 행을 테스트하면서 모델이 작동하는 것을 확인
 print(f'ingredients: {X_test.iloc[50][X_test.iloc[50]!=0].keys()}')
 print(f'cuisine: {y_test.iloc[50]}')
 ```
@@ -363,10 +359,9 @@ print(f'cuisine: {y_test.iloc[50]}')
 ingredients: Index(['chicken', 'cilantro'], dtype='object')
 cuisine: thai
 ```
-*다른 행 번호를 사용해서도 결과 확인해봐도 된다.*
+다른 행 번호 사용해서도 결과 확인 가능
 
 ```python
-# 예측의 정확성 확인
 test= X_test.iloc[50].values.reshape(-1, 1).T
 proba = model.predict_proba(test)
 classes = model.classes_
@@ -384,12 +379,9 @@ topPrediction.head()
 | korean   |  0.017277  |
 | thai      |  0.007634   |
 
-**인도 요리**가 가장 좋은 추측이며, 그럴 확률이 약 71%로 높다.
-
-*모델이 왜 인도 요리가 가장 좋다고 확신하는지 설명할 수 있는지 생각해봐야 한다.*
+**인도 요리**가 가장 좋은 추측이다.
 
 ```python
-# 회귀 분석 수업에서 했던 것처럼 분류 보고서를 인쇄하여 더 자세히 확인 
 y_pred = model.predict(X_test)
 print(classification_report(y_test,y_pred))
 ```
@@ -407,12 +399,9 @@ print(classification_report(y_test,y_pred))
 weighted avg       0.81      0.81      0.81      1199
 ```
 
-🎈 **정리된 데이터를 사용하여 일련의 재료를 기반으로 국가 요리를 예측할 수 있는 기계 학습 모델을 구축했다. Scikit-learn이 제공하는 다양한 데이터 분류 옵션을 읽어보는 것도 좋다. 'solver'의 개념을 더 깊이 파고들어서 이면에서 무슨일이 벌어지는지 이해할 수 있을 것이다.**
+## **chap3**
 
-
-
-
-## Classifiers 2 
+### **연습-데이터 나누기**
 
 **숫자 데이터를 분류**하는 더 많은 방법을 살펴볼 것이다.
 
@@ -420,30 +409,20 @@ weighted avg       0.81      0.81      0.81      1199
 
 ### 분류 지도 
 
-이전에는, `Microsoft`의 차트시트를 사용하여 **데이를 분류할 때 사용할 수 있는 다양한 옵션**에 대해서 배웠다.
+이전에, Microsoft 치트 시트를 사용해서 데이터를 분류할 때 다양한 옵션을 배웠다. Scikit-learn은 추정기(classifiers)를 좁히는 데 더 도움을 받을 수 있는 유사하지만 보다 세분화된 치트 시트를 비슷하게 제공한다.
+![image](https://user-images.githubusercontent.com/62239143/167249053-138126c6-6dfc-45a4-b0ea-bb596424ef8c.png)
 
-`Scikit-learn`은 유사하지만, *추정기(분류기)의 범위를 더 좁히는*데 도움이 될 수 있는 **세분화된 시트(granular cheat sheet)**를 제공한다.
-
-![classifiers4](http://jjhcom.github.io/assets/images/banners/classifiers4.png)
-
-*데이터를 사용해 볼 추정기와 관련된 문제에 접근하는 방법에 대한 대략적인 지침을 사용자에게 제공하기 위해 설계*
-
-위의 지도는 **데이터를 명확하게 파악**하면 **의사 결정**에 이르는 경로로 나아갈 수 있으므로 유용하다.
-
-따라가기에 매우 도움이 되는 길은 다음과 같다.
+위의 지도는 데이터를 명확하게 파악하면 의사 결정에 이르는 경로로 나아갈 수 있으므로 유용하다.
 - 50개 이상의 샘플을 가지고 있다
 - 범주를 예측하고 싶다
 - 레이블이 지정된 데이터가 있다
-- 10만개 미만의 샘플을 가지고 있다
-- 선형 SVC를 선택할 수 있다
-- 수치 데이터를 가지고 있어서 작동이 되지 않는다면, KNeighbors Classifier을 사용해볼 수 있다.
-- 그래도 작동이 되지 않는다면, SVC 및 앙상블 분류기를 사용해 볼 수 있다.
+- 100K(10만)개 미만의 샘플을 가지고 있다
+- 선형 SVC를 고를 수 있다
+- 수치 데이터를 가지고 있어서 작동이 되지 않을 때
+   -  KNeighbors Classifier을 사용해볼 수 있다.
+   - 그래도 작동 되지 않는다면, SVC 및 앙상블 분류기를 사용해 볼 수 있다.
 
-
-### 연습
-**데이터 나누기**
 ```python
-# 사용할 라이브러리 불러오기
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
