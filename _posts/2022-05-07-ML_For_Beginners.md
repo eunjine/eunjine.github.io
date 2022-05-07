@@ -67,8 +67,7 @@ memory usage: 7.2+ MB
 df.cuisine.value_counts().plot.barh() # 데이터 분포가 고르지 않음 
 ```
 
-
-![res_1](http://jjhcom.github.io/assets/images/banners/res_1.png)
+![cuisine data distribution](images/cuisine-dist.png)
 
 ```python
 # 요리당 사용할 수 있는 데이터 크기
