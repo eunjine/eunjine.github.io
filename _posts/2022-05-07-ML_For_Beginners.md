@@ -1,10 +1,9 @@
 ---
-layout: single
-title:  "Machine_Learning_For_Beginners"
-categories: coding
-tag: [python, blog, jekyll]
-toc: true
-author_profile: false
+layout: post
+title: Machine_Learning_For_Beginners
+categories: Machine_Learning
+tags: Machine_Learning
+use_math: true
 ---
 
 ## **분류 소개**
