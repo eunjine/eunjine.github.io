@@ -568,37 +568,32 @@ weighted avg       0.73      0.72      0.72      1199
 ## **chap4**
 
 ### **요리 추천 Web App 만들기**
+이 단원에서는 이전 단원에서 배운 몇 가지 기술과 이 시리즈 전체에서 사용된 맛있는 요리 데이터 세트를 사용하여 분류 모델을 구축한다. 또한 Onnx의 웹 런타임을 활용하여 저장된 모델을 사용하는 작은 웹 앱을 만든다. 머신 러닝의 가장 유용한 실제 용도 중 하나는 추천 시스템을 구축하는 것이다.
 
-- 이전 교육에서 배운 몇가지 기술과 이 시리즈에서 사용된 맛있는 요리 데이터 세트를 사용하여 **분류 모델을 구축**한다.
-- 또한, `Onnx의 웹 런타임`을 활용하여 **저장된 모델을 사용**할 수 있는 **작은 웹 앱**을 만들 것이다.
-- 머신러닝의 가장 유용한 실용 중 하나는 **추천 시스템을 구축**하는 것이고, 이 방향으로 가는 첫 단계를 학습해볼 것이다.
-  - [적용 참고 영상](https://www.youtube.com/watch?v=17wdM9AHMfg)
 
-배우게 될 방법
-- 모델을 작성하고 이를 Onnx 모델로 저장하는 방법
+**배우게 될 방법**
+- 모델을 빌드하고 Onnx 모델로 저장하는 방법
 - Netron을 사용하여 모델을 검사하는 방법
 - 추론을 위해 웹 앱에서 모델을 사용하는 방법
 
-### 모델 구축하기
-- 응용 ML 시스템을 구축하는 것은 비즈니스 시스템에 이러한 기술을 활용하는 데 있어 중요한 부분이다.
-- Onnx를 사용하여 웹 응용 프로그램 내에서 모델을 사용할 수 있으므로 필요한 경우 오프라인 컨텍스트 모델을 사용할 수 있다.
-- 이전 수업에서, UFO 목격에 대한 회귀 모형을 만들고 그것을 "pickled"하여 플라스크 앱에 사용했다.
-  - 이 구조는 매우 유용하지만, Full-Stack 파이썬 앱이며, 요구사항은 자바스크립트 애플리케이션 사용을 포함할 수 있다.
+### **모델 구축하기**
+응용 ML 시스템을 구축하는 것은 비즈니스 시스템에 이러한 기술을 활용하는 데 중요한 부분이다. Onnx를 사용하여 웹 애플리케이션 내에서 모델을 사용할 수 있다.(필요한 경우 오프라인 컨텍스트에서 모델을 사용할 수 있음).
 
+이전 단원 에서는 UFO 목격에 대한 회귀 모델을 만들고 "pickled"하고 Flask 앱에서 사용했다. 이 구조는 알고 있으면 매우 유용하지만 full-stack Python 앱이며 요구 사항에 JavaScript 응용 프로그램 사용이 포함할 수 있다.
 
-### 연습
-**분류 모델 훈련**
+이 단원에서는 추론을 위한 기본 JavaScript 기반 시스템을 구축할 수 있다. 그러나 먼저 모델을 훈련시키고 Onnx에서 사용할 수 있도록 변환해야 한다.
 
-우리가 사용했던 정제된 요리 데이터를 사용하여 **분류 모델을 훈련**시킨다.
+### **연습 - 훈련 분류 모델**
+
+우리가 사용했던 정제된 요리 데이터를 사용하여 분류 모델을 훈련시킨다.
+
 ```python
-# 필요한 라이브러리 불러오기
-# skl2onnx는 Scikit-learn 모델을 Onnx 형식으로 변환하기 위해 사용
 !pip install skl2onnx
 import pandas as pd 
 ```
+Scikit-learn 모델을 Onnx 형식으로 변환 하려면 ' skl2onnx '가 필요
 
 ```python
-# CSV 파일을 읽어와서 데이터 확인
 data = pd.read_csv('cleaned_cuisines.csv')
 data.head()
 ```
@@ -612,7 +607,7 @@ data.head()
 | 4   | 4       | indian  | 0      | 0        | 0     | 0          | 0     | 0            | 0       | 0        | ... | 0       | 0           | 0          | 0                       | 0    | 0    | 0   | 0     | 1      | 0        |
 
 ```python
-# 처음 두개의 불필요한 열을 삭제하고, 남아있는 데이터를 'X'로 저장
+# 처음 두개의 필요없는 열을 삭제하고, 나머지 데이터를 'X'로 저장
 X = data.iloc[:,2:]
 X.head()
 ```
@@ -640,8 +635,9 @@ y.head()
 |3 |	indian |
 |4 |	indian |
 
+### **훈련 루틴 개시하기**
 ```python
-# 정확도가 좋았던 'SVC 라이브러리'를 사용하여 훈련
+# 정확도가 좋은 'SVC 라이브러리'를 사용하여 훈련
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
@@ -654,7 +650,7 @@ X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3)
 ```
 
 ```python
-# SVC분류기 모델을 구축
+# SVC분류기 모델을 빌드
 model = SVC(kernel='linear', C=10, probability=True,random_state=0)
 model.fit(X_train,y_train.values.ravel())
 ```
